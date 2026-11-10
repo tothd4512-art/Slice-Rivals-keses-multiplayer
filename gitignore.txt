@@ -1,0 +1,17 @@
+# Dependencies and caches (Render runs `npm ci` itself)
+node_modules/
+.npm/
+.cache/
+.local/
+
+# Build output (Render builds it again)
+dist/
+
+# Local-only files
+.env
+.env.production
+.env.local
+uploads/
+emote_packs/
+*.log
+.DS_Store
