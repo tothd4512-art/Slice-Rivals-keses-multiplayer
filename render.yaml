@@ -1,0 +1,14 @@
+# Online game server (Render). The frontend is deployed separately (Vercel) and points here via VITE_SERVER_URL.
+services:
+  - type: web
+    name: blade-rivals-server
+    runtime: node
+    plan: free               # sleeps when idle; the first connection waits ~1 minute (the game shows this to players)
+    buildCommand: npm ci && npm run build
+    startCommand: npm run server
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: HOST
+        value: 0.0.0.0
