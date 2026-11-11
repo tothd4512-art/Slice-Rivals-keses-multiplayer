@@ -1,0 +1,147 @@
+{
+  "format": "mj-emote",
+  "version": 1,
+  "id": "lean_forward",
+  "name": "🧍 Forward Lean",
+  "desc": "A cool forward lean with a slow sway, hands loose at your sides.",
+  "duration": 2,
+  "loop": true,
+  "knife": true,
+  "keyframes": [
+    {
+      "t": 0,
+      "parts": {
+        "body": {
+          "rot": [
+            -0.35,
+            0,
+            0
+          ],
+          "pos": [
+            0,
+            -0.04,
+            0
+          ]
+        },
+        "leftArm": {
+          "rot": [
+            -0.2,
+            0,
+            0.12
+          ]
+        },
+        "rightArm": {
+          "rot": [
+            -0.2,
+            0,
+            -0.12
+          ]
+        },
+        "leftLeg": {
+          "rot": [
+            0.08,
+            0,
+            0
+          ]
+        },
+        "rightLeg": {
+          "rot": [
+            -0.08,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "t": 1,
+      "parts": {
+        "body": {
+          "rot": [
+            -0.42,
+            0,
+            0.06
+          ],
+          "pos": [
+            0,
+            -0.05,
+            0
+          ]
+        },
+        "leftArm": {
+          "rot": [
+            -0.2,
+            0,
+            0.12
+          ]
+        },
+        "rightArm": {
+          "rot": [
+            -0.2,
+            0,
+            -0.12
+          ]
+        },
+        "leftLeg": {
+          "rot": [
+            0.08,
+            0,
+            0
+          ]
+        },
+        "rightLeg": {
+          "rot": [
+            -0.08,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "t": 2,
+      "parts": {
+        "body": {
+          "rot": [
+            -0.35,
+            0,
+            0
+          ],
+          "pos": [
+            0,
+            -0.04,
+            0
+          ]
+        },
+        "leftArm": {
+          "rot": [
+            -0.2,
+            0,
+            0.12
+          ]
+        },
+        "rightArm": {
+          "rot": [
+            -0.2,
+            0,
+            -0.12
+          ]
+        },
+        "leftLeg": {
+          "rot": [
+            0.08,
+            0,
+            0
+          ]
+        },
+        "rightLeg": {
+          "rot": [
+            -0.08,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  ]
+}
