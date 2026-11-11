@@ -2150,6 +2150,8 @@ function setupRound() {
   const isDojo = selectedGameMode === 'training_dojo';
 
   arena.barriers.active = !isFFA && !isDojo && !isPropMatch();
+  // Prop Hunt has no weapon/ability hotbar and no coach tips
+  document.querySelector('.hud-bottom-right')?.classList.toggle('hidden', isPropMatch());
   arena.barriers.playerMesh.visible = arena.barriers.active;
   arena.barriers.enemyMesh.visible = arena.barriers.active;
 
@@ -2262,7 +2264,7 @@ function setupRound() {
       showBanner('3', '🌪️ FFA STORM ZONE • 6 FIGHTERS!', '#e879f9');
     } else {
       const isMatchPointTie = matchStats.playerScore === ROUNDS_TO_WIN - 1 && matchStats.enemyScore === ROUNDS_TO_WIN - 1;
-      const tip = (selectedAiMode === 'adaptive' && !matchGunMode) ? getCoachTipForRound(profile.botMemory, matchStats.roundNumber) : null;
+      const tip = (selectedAiMode === 'adaptive' && !matchGunMode && !isPropMatch()) ? getCoachTipForRound(profile.botMemory, matchStats.roundNumber) : null;
       if (tip) {
         elCoachBanner.classList.remove('hidden');
         elCoachText.textContent = tip;
@@ -4999,6 +5001,18 @@ function mpOnPeerAct(msg) {
   if (c && msg.kind === 'slash') c.char.triggerSlashAnim(msg.step | 0);
 }
 
+// Picking up an enemy's thrown knife adds its skin to the profile ("Owned"), usable from the Armory.
+function unlockEnemyKnifeSkin(skinId) {
+  const skin = getSkinById(skinId);
+  const isNew = !profile.unlockedSkins.includes(skin.id);
+  if (isNew) {
+    profile.unlockedSkins.push(skin.id);
+    saveProfile(profile);
+    refreshMenuProfileUI();
+  }
+  return { skin, isNew };
+}
+
 // Another player threw a knife: draw a visual-only copy (ghost), damage is decided by the thrower's client
 function mpOnPeerThrow(msg) {
   if (!mpMatch || !Array.isArray(msg.origin) || !Array.isArray(msg.dir)) return;
@@ -5957,13 +5971,15 @@ function gameLoop(now) {
       combatants,
       callbacks: {
         onHitCombatant: (info) => applyDamageToCombatant(info),
-        onPlayerPickupKnife: (pos) => {
-          player.knifeCharges = Math.min(player.knifeMaxCharges, player.knifeCharges + 1);
-          player.hasKnife = true;
-          if (player.knifeCharges >= player.knifeMaxCharges) player.knifeRecharge = 0;
-          viewmodel.playEquip();
+        onPickupEnemyKnife: ({ pos, skinId }) => {
+          const { skin, isNew } = unlockEnemyKnifeSkin(skinId);
           sfx.playKnifePickup();
-          particles.spawnFloatingText(pos, '+KNIFE PICKED UP!', '#00f0ff', false);
+          particles.spawnFloatingText(
+            pos,
+            isNew ? `+OWNED: ${skin.name}` : `${skin.name} (already owned)`,
+            '#00f0ff',
+            false
+          );
         },
         onPlayerDeflect: (pos) => {
           player.parryTimer = 0;

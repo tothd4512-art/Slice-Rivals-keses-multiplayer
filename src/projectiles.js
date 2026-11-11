@@ -112,6 +112,7 @@ export class ProjectileManager {
       ghost, // visual-only copy of another player's knife (multiplayer): never deals damage here
       ownerId,
       originalOwnerId: ownerId,
+      skinId, // enemy knives unlock this skin when picked up
       team,
       pos: origin.clone(),
       vel: direction.clone().normalize().multiplyScalar(speed),
@@ -262,7 +263,10 @@ export class ProjectileManager {
         this._removeChain(k);
         k.trailMat.opacity = Math.max(0, k.trailMat.opacity - dt * 3.5);
 
-        if (k.originalOwnerId === 'player' && !player.hasKnife && !player.dead) {
+        // Only ENEMY knives can be picked up (own knives stay on the map and expire).
+        // Picking one up unlocks its skin in the profile ("Owned"), usable from the Armory.
+        const isEnemyKnife = k.originalOwnerId !== 'player' && k.team !== playerTeam && k.team !== 'dojo_targets';
+        if (isEnemyKnife && !player.dead) {
           k.pickupRing.visible = true;
           const s = 1 + Math.sin(k.age * 9) * 0.18;
           k.pickupRing.scale.set(s, s, 1);
@@ -271,7 +275,7 @@ export class ProjectileManager {
           const dz = player.pos.z - k.pos.z;
           const dy = player.pos.y + 1.0 - k.pos.y;
           if (dx * dx + dz * dz < 2.5 * 2.5 && Math.abs(dy) < 2.5) {
-            callbacks.onPlayerPickupKnife(k.pos);
+            callbacks.onPickupEnemyKnife({ pos: k.pos, skinId: k.skinId });
             this._markDead(k);
             continue;
           }
